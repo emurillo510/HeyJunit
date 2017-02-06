@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:batch="http://www.springframework.org/schema/batch"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/batch
+		http://www.springframework.org/schema/batch/spring-batch-3.0.xsd
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+
+    <bean id="flatfilereader" class="org.springframework.batch.item.file.FlatFileItemReader">
+
+        <property name="resource" value="classpath:input/report.csv" />
+
+        <property name="lineMapper">
+            <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+                <property name="lineTokenizer">
+                    <bean
+                            class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+                        <property name="names" value="id,sales,qty,staffName,date" />
+                    </bean>
+                </property>
+                <property name="fieldSetMapper">
+                    <!--<bean class="com.mkyong.ReportFieldSetMapper" />-->
+                    <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
+                       <property name="prototypeBeanName" value="report" />
+                   </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+    <bean id="report" class="Report" scope="prototype"/>
+</beans>
